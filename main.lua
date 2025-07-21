@@ -30,15 +30,15 @@ options:add_property("Executableparams", "")
 -- menu
 renoise.tool():add_menu_entry {
    name = "Main Menu:Tools:Freesound:Browse samples...",
-   invoke = function() 
-      check_settings() 
+   invoke = function()
+      check_settings()
    end
                               }
 
 renoise.tool():add_menu_entry {
    name = "Main Menu:Tools:Freesound:Settings",
-   invoke = function() 
-      show_settings() 
+   invoke = function()
+      show_settings()
    end
                               }
 
@@ -83,7 +83,7 @@ function download_sample(sample)
    else
      final_name = os.tmpname()  ..'.'.. sample['type']
    end
-   
+
    local sample_name = string.format("%d-%s.%s", sample['id'], sample['name'], sample['type'])
    local sample_name = string.gsub(string.gsub(sample_name, ' ', ''), '"', '')
    local final_name = ''
@@ -116,8 +116,8 @@ function download_sample(sample)
    status.text = "downloading " .. sample['name']
    local uri = sample['hq_sample']
    Request({
-              url=uri, 
-              method=Request.GET, 
+              url=uri,
+              method=Request.GET,
               save_file=true,
               default_download_folder=false,
               error=erro,
@@ -125,7 +125,7 @@ function download_sample(sample)
 end
 
 
-function preview_sample(sample)   
+function preview_sample(sample)
    if options.Executable.value == '' and options.ExecutableInfo.value == '' then
       local war = vb:multiline_text{width=200, height=100, text= [[ You dont have sample player configured
 Renoise will use default player provided by system ]]}
@@ -154,8 +154,8 @@ Renoise will use default player provided by system ]]}
    status.text = "previewing " .. sample['name'] .. ' please wait'
    local uri = sample['preview']
    Request({
-              url=uri, 
-              method=Request.GET, 
+              url=uri,
+              method=Request.GET,
               save_file=true,
               default_download_folder=false,
               error=erro,
@@ -178,7 +178,7 @@ function search(name, tag, author, sort, page)
    if filtr ~= "" then
       pars['filter'] = 'filter=' .. filtr
    end
-   
+
    pars['sort'] = 'sort=' .. sort_pars[sort] .. ''
    for i, filtr in pairs(pars) do
       url = url .. filtr .. '&'
@@ -201,7 +201,7 @@ local function download_img(url, icon, sample)
    end
    Request({
               url=url ,
-              method=Request.GET, 
+              method=Request.GET,
               save_file=true,
               success=suc})
 end
@@ -233,19 +233,19 @@ function parse_results(data, status, xml)
    else
       vb.views.prev_button.active = false
    end
-   
+
    if data['next'] then
       vb.views.next_button.active = true
    else
       vb.views.next_button.active = false
    end
-   
+
 end
 
 -- rendering results
 local function render_sample_row(sample)
    local vb = renoise.ViewBuilder()
-   local icon = 
+   local icon =
       vb:bitmap {
          height=30,
          bitmap=sample['img'],
@@ -257,14 +257,14 @@ local function render_sample_row(sample)
       margin=2,
       style='border',
       vb:row{ icon },
-      
+
       vb:row{
-         vb:button { bitmap='play.bmp', 
+         vb:button { bitmap='play.bmp',
                      pressed = function()
                         preview_sample(sample)
                      end
          },
-         vb:button { bitmap='download.bmp', 
+         vb:button { bitmap='download.bmp',
                      pressed = function()
                         download_sample(sample)
                      end
@@ -284,7 +284,7 @@ function show_sample_table(samples)
    for k, sample in pairs(samples) do
       cr:add_child(render_sample_row(sample))
       if count > 4 then
-         cr = vb:row{spacing=2}         
+         cr = vb:row{spacing=2}
          st:add_child(cr)
          count = 0
       end
@@ -357,7 +357,7 @@ function show_settings()
                                                end}
                                             }
                                         })
-   
+
 end
 
 -- check for future ability of saving samples in defined directory
@@ -396,12 +396,12 @@ function show_search_dialog()
       width = 60,
       items = sort_orders,
    }
-   
+
    local author_field = vb:textfield {
       id = "author",
       width = 120,
    }
-   
+
    local search_button = vb:horizontal_aligner{
       mode="right",
       vb:button{
@@ -413,7 +413,7 @@ function show_search_dialog()
          end
       }
    }
-   
+
    local search_bar = vb:row {
       vb:text{
          text = "name"
@@ -426,7 +426,7 @@ function show_search_dialog()
       vb:text{
          text = "author"
       },
-      author_field, 
+      author_field,
       vb:text{
          text = "order by"
       },
@@ -439,7 +439,7 @@ function show_search_dialog()
       height=600,
       style="invisible",
       id="sample_list",
-      
+
       sample_table
    }
 
@@ -486,13 +486,13 @@ function show_search_dialog()
       status = vb:text{
          align="center",
          text = "",
-         
+
       }
    local status_bar = vb:horizontal_aligner {
       mode="center",
       status
    }
-   
+
    renoise.app():show_custom_dialog(
       "Search freesound.org samples",
       vb:column {
