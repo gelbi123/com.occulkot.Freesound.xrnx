@@ -185,7 +185,11 @@ function search(name, tag, author, sort, page)
    end
    url = url .. 'page=' .. page
    url = url .. "&fields=id,type,duration,previews,name,username,url,images"
-   HTTP:get(url, {}, parse_results)
+   print(url)
+   --HTTP:get(url, {}, parse_results)
+   local results = os.capture("curl '"..url.."'", 1)
+   print(results)
+   parse_results(results)
 end
 
 local samples = {}
@@ -207,7 +211,7 @@ local function download_img(url, icon, sample)
 end
 
 local sample_table= ""
-function parse_results(data, status, xml)
+function parse_results(data)
    local data = json.decode(data)
    samples = {}
    for i, sampl in pairs(data['results']) do
