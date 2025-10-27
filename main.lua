@@ -153,13 +153,11 @@ Renoise will use default player provided by system ]]}
    end
    status.text = "previewing " .. sample['name'] .. ' please wait'
    local uri = sample['preview']
-   Request({
-              url=uri,
-              method=Request.GET,
-              save_file=true,
-              default_download_folder=false,
-              error=erro,
-              success=suc})
+   local fname = string.match(uri, "[^/\\]+%.mp3$")
+   local save_folder = options.SavePath.value
+   local save_name = save_folder .. '/' .. fname
+   os.capture("curl '"..uri.."' --output " ..save_name)
+   suc(save_name)
 end
 
 
