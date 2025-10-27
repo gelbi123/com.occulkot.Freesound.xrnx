@@ -137,16 +137,16 @@ Renoise will use default player provided by system ]]}
    local download_info = nil
    local suc = function (fname, costam, costam)
       status.text = 'playing preview ...'
-      if options.Executable.value == '' then
-         renoise.app():open_url('file://' .. fname)
-      else
-         local osa = io.popen("uname -s"):read("*l")
-         if  osa == nil or osa:match("^Windows") then
-            os.execute('start "" "' .. options.Executable.value .. '" "' .. options.Executableparams.value .. '" "' .. fname .. '"')
-         else
-            os.execute('"' .. options.Executable.value .. '" ' .. options.Executableparams.value .. ' "' .. fname .. '"&')
-         end
+      local song = renoise.song()
+      local instr = song.selected_instrument
+      if #instr.samples == 0 then
+        instr:insert_sample_at(1)
       end
+      local sample = instr.samples[1]
+      local buffer = sample.sample_buffer
+      buffer:load_from(fname)
+      buffer:prepare_sample_data_changes()
+      buffer:finalize_sample_data_changes()
    end
    local erro = function (error)
       status.text="Error while downloading " .. sample['name']
