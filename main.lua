@@ -185,17 +185,14 @@ function search(name, tag, author, sort, page)
    end
    url = url .. 'page=' .. page
    url = url .. "&fields=id,type,duration,previews,name,username,url,images"
-   print(url)
-   --HTTP:get(url, {}, parse_results)
    local results = os.capture("curl '"..url.."'", 1)
-   print(results)
    parse_results(results)
 end
 
 local samples = {}
 local function download_img(url, icon, sample)
-   local suc = function (fname, custam, costam)
-      if samples[sample['id']] then
+      local suc = function (fname, custam, costam)
+            if samples[sample['id']] then
          if samples[sample['id']]['icon'] then
             samples[sample['id']]['icon'].bitmap = fname
          else
@@ -203,11 +200,11 @@ local function download_img(url, icon, sample)
          end
       end
    end
-   Request({
-              url=url ,
-              method=Request.GET,
-              save_file=true,
-              success=suc})
+   local fname = string.match(url, "[^/\\]+%.png$")
+   local save_folder = options.SavePath.value
+   local save_name = save_folder .. '/' .. fname
+   os.capture("curl '"..url.."' --output " ..save_name)
+   suc(save_name)
 end
 
 local sample_table= ""
