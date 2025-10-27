@@ -153,11 +153,12 @@ Renoise will use default player provided by system ]]}
    end
    status.text = "previewing " .. sample['name'] .. ' please wait'
    local uri = sample['preview']
-   local fname = string.match(uri, "[^/\\]+%.mp3$")
-   local save_folder = options.SavePath.value
-   local save_name = save_folder .. '/' .. fname
-   os.capture("curl '"..uri.."' --output " ..save_name)
-   suc(save_name)
+   local fname = os.tmpname(".mp3")
+   -- local fname = string.match(uri, "[^/\\]+%.mp3$")
+   -- local save_folder = options.SavePath.value
+   -- local save_name = save_folder .. '/' .. fname
+   os.capture("curl '"..uri.."' --output " ..fname)
+   suc(fname)
 end
 
 
@@ -198,11 +199,12 @@ local function download_img(url, icon, sample)
          end
       end
    end
-   local fname = string.match(url, "[^/\\]+%.png$")
-   local save_folder = options.SavePath.value
-   local save_name = save_folder .. '/' .. fname
-   os.capture("curl '"..url.."' --output " ..save_name)
-   suc(save_name)
+   local fname = os.tmpname(".png")
+   -- local fname = string.match(url, "[^/\\]+%.png$")
+   -- local save_folder = options.SavePath.value
+   -- local save_name = save_folder .. '/' .. fname
+   os.capture("curl '"..url.."' --output " ..fname)
+   suc(fname)
 end
 
 local sample_table= ""
