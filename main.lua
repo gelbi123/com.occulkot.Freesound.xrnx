@@ -112,13 +112,9 @@ function download_sample(sample)
    end
    status.text = "downloading " .. sample['name']
    local uri = sample['hq_sample']
-   Request({
-              url=uri,
-              method=Request.GET,
-              save_file=true,
-              default_download_folder=false,
-              error=erro,
-              success=suc})
+   local fname = os.tmpname()
+   os.execute("curl '"..uri.."' --output " ..fname)
+   suc(fname)
 end
 
 function tmp_cleaning(samples)
