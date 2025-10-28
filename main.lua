@@ -121,7 +121,6 @@ function download_sample(sample)
               success=suc})
 end
 
-
 function preview_sample(sample)
    local download_info = nil
    local suc= function (fname, costam, costam)
@@ -146,9 +145,6 @@ function preview_sample(sample)
    status.text = "previewing " .. sample['name'] .. ' please wait'
    local uri = sample['preview']
    local fname = os.tmpname(".mp3")
-   -- local fname = string.match(uri, "[^/\\]+%.mp3$")
-   -- local save_folder = options.SavePath.value
-   -- local save_name = save_folder .. '/' .. fname
    os.execute("curl '"..uri.."' --output " ..fname)
    suc(fname)
 end
@@ -193,11 +189,7 @@ local function download_img(url, icon, sample)
       end
    end
    local fname = os.tmpname(".png")
-   -- local fname = string.match(url, "[^/\\]+%.png$")
-   -- local save_folder = options.SavePath.value
-   -- local save_name = save_folder .. '/' .. fname
    os.execute("curl '"..url.."' --output " ..fname)
-   -- assert(io.popen("curl '"..url.."' --output " .. fname, 'r'))
    suc(fname)
 end
 
