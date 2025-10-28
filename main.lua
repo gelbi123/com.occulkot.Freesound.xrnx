@@ -121,6 +121,15 @@ function download_sample(sample)
               success=suc})
 end
 
+function tmp_cleaning(samples)
+   if next(samples) ~= nil then
+      for i, sample in pairs(samples) do
+         local img_path = sample['img']
+         os.remove(img_path)
+      end
+   end
+end
+
 function preview_sample(sample)
    local download_info = nil
    local suc= function (fname, costam, costam)
@@ -196,6 +205,7 @@ end
 local sample_table= ""
 function parse_results(data)
    local data = json.decode(data)
+   tmp_cleaning(samples)
    samples = {}
    for i, sampl in pairs(data['results']) do
       local icon = 'fetching.png'
