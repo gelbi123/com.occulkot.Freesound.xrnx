@@ -128,12 +128,12 @@ function preview_sample(sample)
       local song = renoise.song()
       local instr = song.selected_instrument
       instr.name = 'Freesound'
+      sample_name = sample['name']
+      local sample = instr.samples[1]
+      sample.name = sample_name
       if #instr.samples == 0 then
         instr:insert_sample_at(1)
       end
-      local sample = instr.samples[1]
-      local sample_name = string.match(fname, "[^/\\]+%.mp3$")
-      sample.name = sample_name
       local buffer = sample.sample_buffer
       buffer:load_from(fname)
       buffer:prepare_sample_data_changes()
