@@ -23,9 +23,6 @@ end
 -- options
 local options = renoise.Document.create("FreesoundSettings") {}
 options:add_property("SavePath", "/")
-options:add_property("ExecutableInfo", "")
-options:add_property("Executable", "")
-options:add_property("Executableparams", "")
 
 -- menu
 renoise.tool():add_menu_entry {
@@ -126,14 +123,6 @@ end
 
 
 function preview_sample(sample)
-   if options.Executable.value == '' and options.ExecutableInfo.value == '' then
-      local war = vb:multiline_text{width=200, height=100, text= [[ You dont have sample player configured
-Renoise will use default player provided by system ]]}
-      local sf = renoise.tool().bundle_path .. 'settings.xml'
-      renoise.app():show_custom_dialog("Warning!", vb:column{war})
-      options.ExecutableInfo.value = 'showed'
-      options:save_as(sf)
-   end
    local download_info = nil
    local suc= function (fname, costam, costam)
       status.text = 'playing preview ...'
@@ -319,28 +308,8 @@ function show_settings()
    local sf = renoise.tool().bundle_path .. 'settings.xml'
    options:load_from(sf)
    local ss = nil
-   local ff = vb:textfield{value = options.Executable.value, width=300}
-   local fp = vb:textfield{value = options.Executableparams.value, width=300}
    local fs = vb:textfield{value = options.SavePath.value, width=300}
    ss = renoise.app():show_custom_dialog("Freesound settings", vb:column{
-                                            vb:row{
-                                               vb:text{text="Program for playing sample "}
-                                            },
-                                            vb:row{
-                                               ff,
-                                               vb:button{text="Browse for program",
-                                                         pressed = function ()
-                                                            local t = renoise.app():prompt_for_filename_to_read({"mp3"}, 'Select sample player')
-                                                            ff.value = t
-                                               end},
-                                            },
-                                            vb:row{
-                                               vb:text{text="Program parameters "}
-                                            },
-                                            vb:row{
-                                               fp,
-                                               vb:text{text=""}
-                                            },
                                             vb:row{
                                                vb:text{text="Save Directory "}
                                             },
