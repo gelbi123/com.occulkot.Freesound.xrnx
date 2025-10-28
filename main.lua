@@ -135,14 +135,17 @@ Renoise will use default player provided by system ]]}
       options:save_as(sf)
    end
    local download_info = nil
-   local suc = function (fname, costam, costam)
+   local suc= function (fname, costam, costam)
       status.text = 'playing preview ...'
       local song = renoise.song()
       local instr = song.selected_instrument
+      instr.name = 'Freesound'
       if #instr.samples == 0 then
         instr:insert_sample_at(1)
       end
       local sample = instr.samples[1]
+      local sample_name = string.match(fname, "[^/\\]+%.mp3$")
+      sample.name = sample_name
       local buffer = sample.sample_buffer
       buffer:load_from(fname)
       buffer:prepare_sample_data_changes()
@@ -157,7 +160,7 @@ Renoise will use default player provided by system ]]}
    -- local fname = string.match(uri, "[^/\\]+%.mp3$")
    -- local save_folder = options.SavePath.value
    -- local save_name = save_folder .. '/' .. fname
-   os.capture("curl '"..uri.."' --output " ..fname)
+   os.execute("curl '"..uri.."' --output " ..fname)
    suc(fname)
 end
 
@@ -184,7 +187,8 @@ function search(name, tag, author, sort, page)
    end
    url = url .. 'page=' .. page
    url = url .. "&fields=id,type,duration,previews,name,username,url,images"
-   local results = os.capture("curl '"..url.."'", 1)
+   local handle = io.popen('curl "'.. url .. '"', 'r')
+   local results = handle:read('*a')
    parse_results(results)
 end
 
@@ -203,7 +207,8 @@ local function download_img(url, icon, sample)
    -- local fname = string.match(url, "[^/\\]+%.png$")
    -- local save_folder = options.SavePath.value
    -- local save_name = save_folder .. '/' .. fname
-   os.capture("curl '"..url.."' --output " ..fname)
+   os.execute("curl '"..url.."' --output " ..fname)
+   -- assert(io.popen("curl '"..url.."' --output " .. fname, 'r'))
    suc(fname)
 end
 
